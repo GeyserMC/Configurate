@@ -93,13 +93,7 @@ indra {
     }
     apache2License()
 
-    if (
-        project.hasProperty("spongeSnapshotRepo") &&
-        project.hasProperty("spongeReleaseRepo")
-    ) {
-        publishSnapshotsTo("sponge", project.spongeSnapshotRepo)
-        publishReleasesTo("sponge", project.spongeReleaseRepo)
-    }
+    publishSnapshotsTo("geysermc", "https://repo.opencollab.dev/maven-snapshots")
 
     configurePublications {
         artifactId = archiveName
