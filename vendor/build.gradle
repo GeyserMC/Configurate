@@ -170,7 +170,7 @@ project(":typesafe-config") {
         }
         options.encoding = "UTF-8"
         scalaCompileOptions.additionalParameters.add(
-            "-target:jvm-1.8"
+            "-target:jvm-9"
         )
     }
 
