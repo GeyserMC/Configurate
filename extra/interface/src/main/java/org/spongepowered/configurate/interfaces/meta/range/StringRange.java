@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * @since 4.2.0
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.FIELD})
 public @interface StringRange {
     /**
      * The minimal String length allowed (inclusive.)
