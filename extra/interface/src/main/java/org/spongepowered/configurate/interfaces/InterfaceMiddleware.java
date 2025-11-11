@@ -53,7 +53,7 @@ final class InterfaceMiddleware {
             }
 
             final double value = number.doubleValue();
-            if (!(data.from() >= value && data.to() <= value)) {
+            if (data.from() > value || data.to() < value) {
                 throw new SerializationException(String.format(
                     Locale.ROOT,
                     "'%s' is not in the allowed range of from: %s, to: %s!",
@@ -71,7 +71,7 @@ final class InterfaceMiddleware {
             }
 
             final long value = number.longValue();
-            if (!(data.from() >= value && data.to() <= value)) {
+            if (data.from() > value || data.to() < value) {
                 throw new SerializationException(String.format(
                     Locale.ROOT,
                     "'%s' is not in the allowed range of from: %s, to: %s!",
@@ -89,7 +89,7 @@ final class InterfaceMiddleware {
             }
 
             final int length = string.length();
-            if (!(data.from() >= length && data.to() <= length)) {
+            if (data.from() > length || data.to() < length) {
                 throw new SerializationException(String.format(
                     Locale.ROOT,
                     "'%s' is not in the allowed string length range of from: %s, to: %s!",
