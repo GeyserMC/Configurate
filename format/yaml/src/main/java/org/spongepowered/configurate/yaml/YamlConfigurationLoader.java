@@ -74,6 +74,13 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
     public static final RepresentationHint<NodeStyle> NODE_STYLE = RepresentationHint.of("configurate:yaml/nodestyle", NodeStyle.class);
 
     /**
+     * The amount of blank lines that a specific node should have.
+     * Absent is to inherit the {@link BlankLineStyle} of the document.
+     */
+    public static final RepresentationHint<Integer> BLANK_LINE_STYLE_OVERRIDE
+        = RepresentationHint.of("configurate:yaml/blanklinestyleoverride", Integer.class);
+
+    /**
      * Creates a new {@link YamlConfigurationLoader} builder.
      *
      * @return a new builder
@@ -101,6 +108,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
     public static final class Builder extends AbstractConfigurationLoader.Builder<Builder, YamlConfigurationLoader> {
         private final DumperOptions options = new DumperOptions();
         private @Nullable NodeStyle style;
+        private @Nullable BlankLineStyle blankLineStyle;
         private boolean enableComments;
         private int lineLength;
 
@@ -185,6 +193,30 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
         }
 
         /**
+         * Sets the blank line style handling for all written files.
+         *
+         * @param style the style to apply
+         * @return this builder
+         * @see BlankLineStyle
+         * @since 4.2.0
+         */
+        public Builder blankLineStyle(final @Nullable BlankLineStyle style) {
+            this.blankLineStyle = style;
+            return this;
+        }
+
+        /**
+         * Gets the explicitly applied current blank line styling.
+         * This doesn't return the implicit fallback used when not setting it explicitly.
+         *
+         * @return the blank line style
+         * @since 4.2.0
+         */
+        public @Nullable BlankLineStyle blankLineStyle() {
+            return this.blankLineStyle;
+        }
+
+        /**
          * Set whether comment handling is enabled on this loader.
          *
          * <p>When comment handling is enabled, comments will be read from files
@@ -261,7 +293,9 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
         opts.setIndentWithIndicator(true);
         // the constructor needs ConfigurationOptions, which is only available when called (loadInternal)
         this.constructor = ThreadLocal.withInitial(() -> new YamlConstructor(loaderOpts));
-        this.yaml = ThreadLocal.withInitial(() -> new Yaml(this.constructor.get(), new YamlRepresenter(true, opts), opts, loaderOpts));
+        this.yaml = ThreadLocal.withInitial(() -> {
+            return new Yaml(this.constructor.get(), new YamlRepresenter(builder.blankLineStyle(), true, opts), opts, loaderOpts);
+        });
     }
 
     @Override

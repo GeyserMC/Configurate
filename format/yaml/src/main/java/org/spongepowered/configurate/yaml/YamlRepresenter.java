@@ -46,10 +46,12 @@ final class YamlRepresenter extends Representer {
 
     private static final CommentLine BLANK_LINE = new CommentLine(null, null, "", CommentType.BLANK_LINE);
 
+    private final BlankLineStyle blankLineStyle;
     private final boolean padComments;
 
-    YamlRepresenter(final boolean padComments, final DumperOptions options) {
+    YamlRepresenter(final @Nullable BlankLineStyle blankLineStyle, final boolean padComments, final DumperOptions options) {
         super(options);
+        this.blankLineStyle = blankLineStyle != null ? blankLineStyle : BlankLineStyle.AFTER_NESTED;
         this.padComments = padComments;
         multiRepresenters.put(ConfigurationNode.class, new ConfigurationNodeRepresent());
         nullRepresenter = new EmptyNullRepresenter();
@@ -60,25 +62,28 @@ final class YamlRepresenter extends Representer {
         public Node representData(final Object nodeObject) {
             final ConfigurationNode node = (ConfigurationNode) nodeObject;
 
+            final @Nullable Integer blankLineCount = node.ownHint(YamlConfigurationLoader.BLANK_LINE_STYLE_OVERRIDE);
+
             final Node yamlNode;
             if (node.isMap()) {
-                final List<NodeTuple> children = new ArrayList<>();
                 boolean first = true;
+                boolean previousNested = false;
+
+                final List<NodeTuple> children = new ArrayList<>();
                 for (Map.Entry<Object, ? extends ConfigurationNode> ent : node.childrenMap().entrySet()) {
+                    final ConfigurationNode child = ent.getValue();
                     // SnakeYAML supports both key and value comments. Add the comments on the key
-                    final Node value = represent(ent.getValue());
+                    final Node value = represent(child);
                     final Node key = represent(ent.getKey());
                     key.setBlockComments(value.getBlockComments());
                     value.setBlockComments(Collections.emptyList());
-                    if (
-                            !first
-                            && !(node.parent() != null && node.parent().isList())
-                            && key.getBlockComments() != null
-                            && !key.getBlockComments().isEmpty()
-                    ) {
-                        key.getBlockComments().add(0, BLANK_LINE);
+
+                    final @Nullable Integer childBlankLineCount = child.ownHint(YamlConfigurationLoader.BLANK_LINE_STYLE_OVERRIDE);
+                    if (childBlankLineCount == null && !first && separateBefore(node, previousNested)) {
+                        addBlockCommentBlankLine(key, 1);
                     }
                     first = false;
+                    previousNested = isNested(child);
 
                     children.add(new NodeTuple(key, value));
                 }
@@ -119,12 +124,41 @@ final class YamlRepresenter extends Representer {
                 }
             }
 
+            if (blankLineCount != null && blankLineCount > 0) {
+                addBlockCommentBlankLine(yamlNode, blankLineCount);
+            }
+
             return yamlNode;
         }
 
         private FlowStyle flowStyle(final ConfigurationNode node) {
             final @Nullable NodeStyle requested = node.ownHint(YamlConfigurationLoader.NODE_STYLE);
             return NodeStyle.asSnakeYaml(requested);
+        }
+
+        private boolean separateBefore(final ConfigurationNode parent, final boolean previousNested) {
+            switch (YamlRepresenter.this.blankLineStyle) {
+                case ROOT_CHILDREN: return parent.parent() == null;
+                case AFTER_NESTED: return previousNested;
+                default: return false;
+            }
+        }
+
+        private boolean isNested(final ConfigurationNode node) {
+            return (node.isMap() || node.isList()) && !node.empty();
+        }
+
+        private void addBlockCommentBlankLine(final Node node, final int count) {
+            @Nullable List<CommentLine> comments = node.getBlockComments();
+
+            if (comments == null) {
+                comments = new ArrayList<>();
+            } else {
+                comments = new ArrayList<>(comments);
+            }
+
+            node.setBlockComments(comments);
+            comments.addAll(0, Collections.nCopies(count, BLANK_LINE));
         }
 
         private CommentLine commentLineFor(final String comment) {
