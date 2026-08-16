@@ -35,7 +35,7 @@ import java.util.StringJoiner;
 
 final class InterfaceTypeSerializer implements TypeSerializer<Object> {
 
-    public static final InterfaceTypeSerializer INSTANCE = new InterfaceTypeSerializer();
+    static final InterfaceTypeSerializer INSTANCE = new InterfaceTypeSerializer();
 
     private final Properties interfaceMappings = new Properties();
 

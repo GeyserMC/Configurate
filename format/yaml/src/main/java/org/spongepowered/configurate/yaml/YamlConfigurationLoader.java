@@ -16,6 +16,8 @@
  */
 package org.spongepowered.configurate.yaml;
 
+import net.kyori.option.Option;
+import net.kyori.option.OptionSchema;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -24,11 +26,11 @@ import org.spongepowered.configurate.RepresentationHint;
 import org.spongepowered.configurate.loader.AbstractConfigurationLoader;
 import org.spongepowered.configurate.loader.CommentHandler;
 import org.spongepowered.configurate.loader.CommentHandlers;
-import org.spongepowered.configurate.loader.LoaderOptionSource;
 import org.spongepowered.configurate.util.UnmodifiableCollections;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 
 import java.io.BufferedReader;
 import java.io.Writer;
@@ -62,7 +64,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
      *
      * @since 4.2.0
      */
-    public static final RepresentationHint<ScalarStyle> SCALAR_STYLE = RepresentationHint.of("configurate:yaml/scalarstyle", ScalarStyle.class);
+    public static final RepresentationHint<ScalarStyle> SCALAR_STYLE = RepresentationHint.of("configurate:yaml/scalar_style", ScalarStyle.class);
 
     /**
      * The YAML node style to use for collection nodes. A {@code null} value
@@ -71,14 +73,14 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
      *
      * @since 4.2.0
      */
-    public static final RepresentationHint<NodeStyle> NODE_STYLE = RepresentationHint.of("configurate:yaml/nodestyle", NodeStyle.class);
+    public static final RepresentationHint<NodeStyle> NODE_STYLE = RepresentationHint.of("configurate:yaml/node_style", NodeStyle.class);
 
     /**
      * The amount of blank lines that a specific node should have.
      * Absent is to inherit the {@link BlankLineStyle} of the document.
      */
     public static final RepresentationHint<Integer> BLANK_LINE_STYLE_OVERRIDE
-        = RepresentationHint.of("configurate:yaml/blanklinestyleoverride", Integer.class);
+        = RepresentationHint.of("configurate:yaml/blank_line_style_override", Integer.class);
 
     /**
      * Creates a new {@link YamlConfigurationLoader} builder.
@@ -106,26 +108,67 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
      * @since 4.0.0
      */
     public static final class Builder extends AbstractConfigurationLoader.Builder<Builder, YamlConfigurationLoader> {
+
+        private static final OptionSchema.Mutable UNSAFE_SCHEMA = OptionSchema.childSchema(AbstractConfigurationLoader.Builder.SCHEMA);
+
+        /**
+         * A schema of options available to configure the YAML loader.
+         *
+         * @since 4.2.0
+         */
+        public static final OptionSchema SCHEMA = UNSAFE_SCHEMA.frozenView();
+
+        /**
+         * The collection node style to use globally when emitting with
+         * this loader.
+         *
+         * @see #nodeStyle(NodeStyle)
+         * @since 4.2.0
+         */
+        public static final Option<NodeStyle> NODE_STYLE = UNSAFE_SCHEMA.enumOption("yaml:node_style", NodeStyle.class, null);
+
+        /**
+         * The indent size (in spaces) to use for documents emitted by
+         * the created loader.
+         *
+         * @see #indent(int)
+         * @since 4.2.0
+         */
+        public static final Option<Integer> INDENT = UNSAFE_SCHEMA.intOption("yaml:indent", 4);
+
+        /**
+         * Whether comments are being read and written.
+         *
+         * @see #commentsEnabled(boolean)
+         * @since 4.3.0
+         */
+        public static final Option<Boolean> COMMENTS_ENABLED = UNSAFE_SCHEMA.booleanOption("yaml:comments_enabled", true);
+
+        /**
+         * The line length before the scalar representation is split into multiple lines.
+         *
+         * @see #lineLength(int)
+         * @since 4.3.0
+         */
+        public static final Option<Integer> LINE_LENGTH = UNSAFE_SCHEMA.intOption("yaml:line_length", 150);
+
+        /**
+         * The blank line style for writing YAML documents.
+         *
+         * @see #blankLineStyle(BlankLineStyle)
+         * @since 4.3.0
+         */
+        public static final Option<BlankLineStyle> BLANK_LINE_STYLE = UNSAFE_SCHEMA.enumOption("yaml:blank_line_style", BlankLineStyle.class, null);
+
         private final DumperOptions options = new DumperOptions();
-        private @Nullable NodeStyle style;
-        private @Nullable BlankLineStyle blankLineStyle;
-        private boolean enableComments;
-        private int lineLength;
 
         Builder() {
-            this.indent(4);
             this.defaultOptions(o -> o.nativeTypes(NATIVE_TYPES));
-            this.from(DEFAULT_OPTIONS_SOURCE);
         }
 
         @Override
-        protected void populate(final LoaderOptionSource options) {
-            final @Nullable NodeStyle declared = options.getEnum(NodeStyle.class, "yaml", "node-style");
-            if (declared != null) {
-                this.style = declared;
-            }
-            this.enableComments = options.getBoolean(true, "yaml", "comments-enabled");
-            this.lineLength = options.getInt(150, "yaml", "line-length");
+        protected OptionSchema optionSchema() {
+            return SCHEMA;
         }
 
         /**
@@ -136,7 +179,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.0.0
          */
         public Builder indent(final int indent) {
-            this.options.setIndent(indent);
+            this.optionStateBuilder().value(INDENT, indent);
             return this;
         }
 
@@ -147,7 +190,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.0.0
          */
         public int indent() {
-            return this.options.getIndent();
+            return this.optionState().value(INDENT);
         }
 
         /**
@@ -178,7 +221,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.0.0
          */
         public Builder nodeStyle(final @Nullable NodeStyle style) {
-            this.style = style;
+            this.optionStateBuilder().value(NODE_STYLE, style);
             return this;
         }
 
@@ -189,7 +232,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.0.0
          */
         public @Nullable NodeStyle nodeStyle() {
-            return this.style;
+            return this.optionState().value(NODE_STYLE);
         }
 
         /**
@@ -201,7 +244,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.2.0
          */
         public Builder blankLineStyle(final @Nullable BlankLineStyle style) {
-            this.blankLineStyle = style;
+            this.optionStateBuilder().value(BLANK_LINE_STYLE, style);
             return this;
         }
 
@@ -213,7 +256,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.2.0
          */
         public @Nullable BlankLineStyle blankLineStyle() {
-            return this.blankLineStyle;
+            return this.optionState().value(BLANK_LINE_STYLE);
         }
 
         /**
@@ -229,7 +272,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.2.0
          */
         public Builder commentsEnabled(final boolean enableComments) {
-            this.enableComments = enableComments;
+            this.optionStateBuilder().value(COMMENTS_ENABLED, enableComments);
             return this;
         }
 
@@ -241,7 +284,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.2.0
          */
         public boolean commentsEnabled() {
-            return this.enableComments;
+            return this.optionState().value(COMMENTS_ENABLED);
         }
 
         /**
@@ -254,7 +297,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.2.0
          */
         public Builder lineLength(final int lineLength) {
-            this.lineLength = lineLength;
+            this.optionStateBuilder().value(LINE_LENGTH, lineLength);
             return this;
         }
 
@@ -266,7 +309,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @since 4.2.0
          */
         public int lineLength() {
-            return this.lineLength;
+            return this.optionState().value(LINE_LENGTH);
         }
 
         @Override
@@ -275,36 +318,34 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
         }
     }
 
-    private final ThreadLocal<YamlConstructor> constructor;
-    private final ThreadLocal<Yaml> yaml;
+    private final LoaderOptions loaderOpts;
+    private final DumperOptions dumperOpts;
+    private final @Nullable BlankLineStyle blankLineStyle;
 
     private YamlConfigurationLoader(final Builder builder) {
         super(builder, new CommentHandler[] {CommentHandlers.HASH});
-        final LoaderOptions loaderOpts = new LoaderOptions()
-            .setAcceptTabs(true)
-            .setProcessComments(builder.commentsEnabled());
-        loaderOpts.setCodePointLimit(Integer.MAX_VALUE);
+        this.loaderOpts = new LoaderOptions()
+                .setAcceptTabs(true)
+                .setProcessComments(builder.commentsEnabled());
+        this.loaderOpts.setCodePointLimit(Integer.MAX_VALUE);
 
-        final DumperOptions opts = builder.options;
-        opts.setDefaultFlowStyle(NodeStyle.asSnakeYaml(builder.style));
-        opts.setProcessComments(builder.commentsEnabled());
-        opts.setWidth(builder.lineLength());
-        opts.setIndicatorIndent(builder.indent());
-        opts.setIndentWithIndicator(true);
-        // the constructor needs ConfigurationOptions, which is only available when called (loadInternal)
-        this.constructor = ThreadLocal.withInitial(() -> new YamlConstructor(loaderOpts));
-        this.yaml = ThreadLocal.withInitial(() -> {
-            return new Yaml(this.constructor.get(), new YamlRepresenter(builder.blankLineStyle(), true, opts), opts, loaderOpts);
-        });
+        this.dumperOpts = builder.options;
+        this.dumperOpts.setDefaultFlowStyle(NodeStyle.asSnakeYaml(builder.optionState().value(Builder.NODE_STYLE)));
+        this.dumperOpts.setIndent(builder.optionState().value(Builder.INDENT));
+        this.dumperOpts.setProcessComments(builder.optionState().value(Builder.COMMENTS_ENABLED));
+        this.dumperOpts.setWidth(builder.optionState().value(Builder.LINE_LENGTH));
+        this.dumperOpts.setIndicatorIndent(builder.optionState().value(Builder.INDENT));
+        this.dumperOpts.setIndentWithIndicator(true);
+
+        this.blankLineStyle = builder.optionState().value(Builder.BLANK_LINE_STYLE);
     }
 
     @Override
     protected void loadInternal(final CommentedConfigurationNode node, final BufferedReader reader) {
-        // the constructor needs ConfigurationOptions for the to be created nodes
-        // and since it's a thread-local, this won't cause any issues
-        this.constructor.get().options = node.options();
+        final Constructor constructor = new YamlConstructor(this.loaderOpts, node.options());
+        final Yaml yaml = new Yaml(constructor, new YamlRepresenter(this.blankLineStyle, true, this.dumperOpts), this.dumperOpts, this.loaderOpts);
 
-        @Nullable CommentedConfigurationNode loaded = this.yaml.get().load(reader);
+        @Nullable CommentedConfigurationNode loaded = yaml.load(reader);
         // when a file exists but is empty (or if the file only exists of comments), the first event will be StreamEnd.
         // getSingleNode will return null, getSingleData uses the Constructor of Tag Null, which just returns null.
         // So we have to map null to an empty root node.
@@ -316,7 +357,9 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
 
     @Override
     protected void saveInternal(final ConfigurationNode node, final Writer writer) {
-        this.yaml.get().dump(node, writer);
+        final Constructor constructor = new YamlConstructor(this.loaderOpts, node.options());
+        final Yaml yaml = new Yaml(constructor, new YamlRepresenter(this.blankLineStyle, true, this.dumperOpts), this.dumperOpts, this.loaderOpts);
+        yaml.dump(node, writer);
     }
 
     @Override

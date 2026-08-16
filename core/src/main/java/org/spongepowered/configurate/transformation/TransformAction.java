@@ -47,7 +47,7 @@ public interface TransformAction {
     }
 
     /**
-     * Rename a node
+     * Rename a node.
      *
      * <p>This transformation cannot be applied to the root node.
      *
@@ -55,7 +55,7 @@ public interface TransformAction {
      * @return new action
      * @since 4.0.0
      */
-    static TransformAction rename(Object newKey) {
+    static TransformAction rename(final Object newKey) {
         return (path, value) -> {
             final Object[] arr = path.array();
             if (arr.length == 0) {
@@ -76,7 +76,7 @@ public interface TransformAction {
      * @return new transformation action
      * @since 4.0.0
      */
-    static <V> TransformAction set(TypeToken<V> type, @Nullable V value) {
+    static <V> TransformAction set(final TypeToken<V> type, final @Nullable V value) {
         return (path, node) -> {
             node.set(type, value);
             return null;
@@ -93,7 +93,7 @@ public interface TransformAction {
      * @return new transformation action
      * @since 4.0.0
      */
-    static <V> TransformAction set(TypeToken<V> type, Supplier<@Nullable V> valueSupplier) {
+    static <V> TransformAction set(final TypeToken<V> type, final Supplier<@Nullable V> valueSupplier) {
         return (path, value) -> {
             value.set(type, valueSupplier.get());
             return null;
@@ -110,13 +110,12 @@ public interface TransformAction {
      * @return new transformation action
      * @since 4.0.0
      */
-    static <V> TransformAction set(Class<V> type, Supplier<V> valueSupplier) {
+    static <V> TransformAction set(final Class<V> type, final Supplier<V> valueSupplier) {
         return (path, value) -> {
             value.set(type, valueSupplier.get());
             return null;
         };
     }
-
 
     /**
      * Called at a certain path, with the node at that path.

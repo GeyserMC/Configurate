@@ -42,24 +42,21 @@ class YamlConstructor extends Constructor {
 
     private static final Pattern LINE_BREAK_PATTERN = Pattern.compile("\\R");
 
-    @Nullable ConfigurationOptions options;
+    private final ConfigurationOptions options;
 
-    YamlConstructor(final LoaderOptions loadingConfig) {
+    YamlConstructor(final LoaderOptions loadingConfig, final ConfigurationOptions options) {
         super(loadingConfig);
+        this.options = options;
     }
 
     @Override
     @EnsuresNonNull("options")
     public Object getSingleData(final Class<?> type) {
-        if (this.options == null) {
-            throw new IllegalStateException("options must be set before calling load!");
-        }
         return super.getSingleData(type);
     }
 
     @Override
     protected Object constructObjectNoCheck(final Node yamlNode) {
-        //noinspection DataFlowIssue guarenteed NonNull by getSingleData, which load(Reader) uses
         final CommentedConfigurationNode node = CommentedConfigurationNode.root(this.options);
 
         // alright, let's first check some interesting behaviour.

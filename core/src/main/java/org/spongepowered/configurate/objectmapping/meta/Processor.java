@@ -88,7 +88,7 @@ public interface Processor<V> {
         Processor<T> make(A data, Type value);
 
         @Override
-        default Processor<T> make(A data, Type value, AnnotatedElement element) {
+        default Processor<T> make(final A data, final Type value, final AnnotatedElement element) {
             return make(data, value);
         }
     }

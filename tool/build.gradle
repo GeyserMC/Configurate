@@ -24,6 +24,10 @@ dependencies {
     implementation libs.jansi
 }
 
+tasks.withType(JavaCompile).configureEach {
+    targetCompatibility = "9"
+}
+
 tasks.withType(KotlinCompile).configureEach {
     kotlinOptions.jvmTarget = "9"
     kotlinOptions.freeCompilerArgs = ["-Xnew-inference"]

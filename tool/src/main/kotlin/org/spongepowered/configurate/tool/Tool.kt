@@ -95,11 +95,11 @@ class Tool :
     CliktCommand(
         help =
             """
-    This tool displays the Configurate data structures read from a config file
+            This tool displays the Configurate data structures read from a config file
 
-    This helps to understand the internal structure of Configurate's nodes
-    """
-                .trimIndent(),
+            This helps to understand the internal structure of Configurate's nodes
+            """
+                .trimIndent()
     ) {
     init {
         AnsiConsole.systemInstall()
@@ -174,7 +174,7 @@ sealed class FormatSubcommand<N : ScopedConfigurationNode<N>>(formatName: String
                     SPLIT,
                     attributes
                         .map { (k, v) -> "@|green \"$k\"|@=@|green \"$v\"|@" }
-                        .joinToString(", ")
+                        .joinToString(", "),
                 )
             }
         }

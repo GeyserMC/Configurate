@@ -33,17 +33,17 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.FIELD})
 public @interface NumericRange {
     /**
-     * The minimal value allowed (inclusive.)
+     * The minimal value allowed (inclusive).
      *
-     * @return the minimal value allowed (inclusive.)
+     * @return the minimal value allowed (inclusive).
      * @since 4.2.0
      */
     long from();
 
     /**
-     * The maximal value allowed (inclusive.)
+     * The maximal value allowed (inclusive).
      *
-     * @return the maximal value allowed (inclusive.)
+     * @return the maximal value allowed (inclusive).
      * @since 4.2.0
      */
     long to();

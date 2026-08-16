@@ -37,17 +37,17 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.FIELD})
 public @interface StringRange {
     /**
-     * The minimal String length allowed (inclusive.)
+     * The minimal String length allowed (inclusive).
      *
-     * @return the minimal value allowed (inclusive.)
+     * @return the minimal value allowed (inclusive).
      * @since 4.2.0
      */
     int from();
 
     /**
-     * The maximal String length allowed (inclusive.)
+     * The maximal String length allowed (inclusive).
      *
-     * @return the maximal value allowed (inclusive.)
+     * @return the maximal value allowed (inclusive).
      * @since 4.2.0
      */
     int to();

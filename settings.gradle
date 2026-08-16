@@ -2,15 +2,19 @@ pluginManagement {
     repositories {
         maven {
             name = "stellardriftReleases"
-            url = "https://repo.stellardrift.ca/repository/internal/"
+            url = "https://repo.stellardrift.ca/maven/internal/"
             mavenContent { releasesOnly() }
         }
-        mavenCentral()
+        maven {
+            name = "papermcSnapshots"
+            url = "https://repo.papermc.io/repository/maven-snapshots/"
+            mavenContent { snapshotsOnly() }
+        }
     }
 }
 
 plugins {
-    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.7.0'
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }
 
 dependencyResolutionManagement {
@@ -30,9 +34,9 @@ dependencyResolutionManagement {
 
 enableFeaturePreview "TYPESAFE_PROJECT_ACCESSORS"
 
-if (!JavaVersion.current().java11Compatible) {
+if (JavaVersion.current() < JavaVersion.VERSION_17) {
     throw new GradleException("""\
-Configurate requires at least Java 11 to build, but you are running ${JavaVersion.current()}.
+Configurate requires at least Java 17 to build, but you are running ${JavaVersion.current()}.
 
 Your JAVA_HOME is currently: ${System.getenv("JAVA_HOME")}
 Is this correct?
@@ -56,7 +60,7 @@ rootProject.name = "$prefix-parent"
 }
 
 // extras
-["kotlin", "guice", "dfu2", "dfu3", "dfu4", "interface"].each {
+["kotlin", "guice", "dfu2", "dfu3", "dfu4", "dfu7", "interface"].each {
     include ":extra:$it"
     findProject(":extra:$it")?.name = "extra-$it"
 }

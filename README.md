@@ -1,13 +1,13 @@
 # [Configurate](https://configurate.aoeu.xyz/) 
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/SpongePowered/Configurate/test-build.yml?branch=master)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/SpongePowered/Configurate/test-build.yml?branch=trunk)
 [![MIT License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE) 
 [![Maven Central](https://img.shields.io/maven-central/v/org.spongepowered/configurate-core?label=stable&color=%23f6cf17)][Maven Central]
 ![Sonatype Nexus (Snapshots)](https://img.shields.io/nexus/s/org.spongepowered/configurate-core?label=dev&server=https%3A%2F%2Foss.sonatype.org)
 
 Configurate is a simple configuration library for Java applications that provides a node-based representation of data, able to handle a wide variety of configuration formats.
 
-Want to talk to us about Configurate? Join us in the `#dev` channel on our [Discord](https://discord.gg/PtaGRAs) or start a thread on our (new!) [Discussions](https://github.com/SpongePowered/Configurate/discussions) page.
+Want to talk to us about Configurate? Join us in the `#configurate` channel on our [Discord](https://discord.gg/sponge) or start a thread on our (new!) [Discussions](https://github.com/SpongePowered/Configurate/discussions) page.
 
 The current supported formats are:
 
@@ -48,8 +48,8 @@ Some features that don't need tight integration with Configurate itself are prov
 ## Usage
 
 * To use Configurate, your project must be configured to use Java 8 or higher.
-* Releases are on [Maven Central] and snapshot artifacts are hosted on Sonatype OSS. Builds are also included on SpongePowered's Maven Repository
-, available at https://repo.spongepowered.org/maven/.
+* Releases are on [Maven Central] and snapshot artifacts are hosted on Sonatype OSS. Builds are also included on SpongePowered's Maven Repository,
+available at https://repo.spongepowered.org/maven/.
 
 If your project uses Maven or Gradle, just add the following to your build scripts.
 
@@ -62,7 +62,7 @@ repositories {
 
 dependencies {
     // Modify this line to target the loader you wish to use.
-    compile 'org.spongepowered:configurate-hocon:4.0.0'
+    implementation 'org.spongepowered:configurate-hocon:4.2.0'
 }
 ```
 
@@ -74,7 +74,7 @@ dependencies {
         <groupId>org.spongepowered</groupId>
         <!-- Modify this line to target the loader you wish to use. -->
         <artifactId>configurate-hocon</artifactId>
-        <version>4.0.0</version>
+        <version>4.2.0</version>
     </dependency>
 </dependencies>
 ```
@@ -86,17 +86,17 @@ More detailed usage instructions can be found in the [Configurate wiki](https://
 #### Clone
 The following steps will ensure your project is cloned properly.
 
-1. `git clone https://github.com/SpongePowered/Configurate.git`
+1. `git clone https://github.com/SpongePowered/Configurate.git --recurse-submodules`
 2. `cd Configurate`
 
 #### Building
-**Note:** If you do not have [Gradle](https://www.gradle.org/) 7.0+ installed then use ./gradlew for Unix systems or Git Bash and gradlew.bat for
+**Note:** If you do not have [Gradle](https://www.gradle.org/) 8.0+ installed then use ./gradlew for Unix systems or Git Bash and gradlew.bat for
  Windows systems in place of any 'gradle' command.
 
 In order to build Configurate you simply need to run the `gradle build` command. You can find the compiled JAR files in `./build/libs`  (found in
  each subproject) labeled similarly to '<subproject>-x.x.x-SNAPSHOT.jar'.
  
- While the entire project can run on Java 8, the project requires Java 11 to build, and for multi-release JAR contents and some tests requires at least Java 16. Gradle will automatically download necessary JDK versions -- see [their documentation](https://docs.gradle.org/current/userguide/toolchains.html) for details on this feature, and how to point it at existing local installations.
+ While the entire project can run on Java 8, the project requires Java 17 to build, and for multi-release JAR contents and some tests requires at least Java 16. Gradle will automatically download necessary JDK versions -- see [their documentation](https://docs.gradle.org/current/userguide/toolchains.html) for details on this feature, and how to point it at existing local installations.
 
 #### Pull Requests
 We love PRs! However, when contributing, here are some things to keep in mind:
