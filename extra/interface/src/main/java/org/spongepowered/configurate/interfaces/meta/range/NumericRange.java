@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * {@link DecimalRange decimals}, {@link NumericRange numerics} and
  * {@link StringRange String length}.
  *
- * @since 4.2.0
+ * @since 4.3.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
@@ -36,7 +36,7 @@ public @interface NumericRange {
      * The minimal value allowed (inclusive).
      *
      * @return the minimal value allowed (inclusive).
-     * @since 4.2.0
+     * @since 4.3.0
      */
     long from();
 
@@ -44,7 +44,7 @@ public @interface NumericRange {
      * The maximal value allowed (inclusive).
      *
      * @return the maximal value allowed (inclusive).
-     * @since 4.2.0
+     * @since 4.3.0
      */
     long to();
 

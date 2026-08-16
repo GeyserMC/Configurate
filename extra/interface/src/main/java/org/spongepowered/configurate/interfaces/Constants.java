@@ -19,7 +19,7 @@ package org.spongepowered.configurate.interfaces;
 /**
  * Constants that are used in multiple files. Meant to be used internally.
  *
- * @since 4.2.0
+ * @since 4.3.0
  */
 public final class Constants {
 
@@ -28,7 +28,7 @@ public final class Constants {
     /**
      * The file location of the interface mappings.
      *
-     * @since 4.2.0
+     * @since 4.3.0
      */
     public static final String MAPPING_FILE = "org/spongepowered/configurate/interfaces/interface_mappings.properties";
 

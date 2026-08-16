@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * limitation, and Hidden will function like it doesn't have a default
  * value.</b>
  *
- * @since 4.2.0
+ * @since 4.3.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})

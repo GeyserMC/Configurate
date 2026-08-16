@@ -26,7 +26,7 @@ import java.util.function.Consumer;
  * This class has the default {@link ConfigurationOptions}
  * with {@link InterfaceTypeSerializer} added to the serializers.
  *
- * @since 4.2.0
+ * @since 4.3.0
  */
 public final class InterfaceDefaultOptions {
 
@@ -43,7 +43,7 @@ public final class InterfaceDefaultOptions {
      * The default ConfigurationOptions with {@link InterfaceTypeSerializer} added to the serializers.
      *
      * @return the default ConfigurationOptions with {@link InterfaceTypeSerializer} added to the serializers.
-     * @since 4.2.0
+     * @since 4.3.0
      */
     public static ConfigurationOptions defaults() {
         return addTo(ConfigurationOptions.defaults());
@@ -56,7 +56,7 @@ public final class InterfaceDefaultOptions {
      *
      * @param options to transform the existing default options
      * @return the default options with the applied changes
-     * @since 4.2.0
+     * @since 4.3.0
      */
     public static ConfigurationOptions addTo(final ConfigurationOptions options) {
         // This creates a new TypeSerializerCollection with 'options' as parent. Child takes priority over parent.
@@ -69,7 +69,7 @@ public final class InterfaceDefaultOptions {
      * @param options to transform the existing default options
      * @param objectMapperConsumer to transform the ObjectMapper factory
      * @return the default options with the applied changes
-     * @since 4.2.0
+     * @since 4.3.0
      */
     public static ConfigurationOptions addTo(final ConfigurationOptions options,
                              final Consumer<ObjectMapper.Factory.Builder> objectMapperConsumer) {

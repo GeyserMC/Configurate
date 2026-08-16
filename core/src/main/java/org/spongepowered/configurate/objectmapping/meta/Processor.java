@@ -48,7 +48,7 @@ public interface Processor<V> {
      *
      * @param <A> annotation type
      * @param <T> handled value type
-     * @since 4.0.0
+     * @since 4.3.0
      */
     @FunctionalInterface
     interface AdvancedFactory<A extends Annotation, T> {
@@ -60,7 +60,7 @@ public interface Processor<V> {
          * @param value declared field type
          * @param container container holding the field, with its annotations
          * @return new processor
-         * @since 4.0.0
+         * @since 4.3.0
          */
         Processor<T> make(A data, Type value, AnnotatedElement container);
 

@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * {@link org.spongepowered.configurate.objectmapping.meta.Required Required}
  * if null shouldn't be allowed.</p>
  *
- * @since 4.2.0
+ * @since 4.3.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
@@ -40,7 +40,7 @@ public @interface StringRange {
      * The minimal String length allowed (inclusive).
      *
      * @return the minimal value allowed (inclusive).
-     * @since 4.2.0
+     * @since 4.3.0
      */
     int from();
 
@@ -48,7 +48,7 @@ public @interface StringRange {
      * The maximal String length allowed (inclusive).
      *
      * @return the maximal value allowed (inclusive).
-     * @since 4.2.0
+     * @since 4.3.0
      */
     int to();
 

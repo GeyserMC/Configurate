@@ -62,7 +62,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
      * <p>If the chosen scalar style would produce syntactically invalid YAML, a
      * valid one will replace it.</p>
      *
-     * @since 4.2.0
+     * @since 4.3.0
      */
     public static final RepresentationHint<ScalarStyle> SCALAR_STYLE = RepresentationHint.of("configurate:yaml/scalar_style", ScalarStyle.class);
 
@@ -71,13 +71,15 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
      * will instruct the emitter to fall back to the
      * {@link Builder#nodeStyle()} setting.
      *
-     * @since 4.2.0
+     * @since 4.3.0
      */
     public static final RepresentationHint<NodeStyle> NODE_STYLE = RepresentationHint.of("configurate:yaml/node_style", NodeStyle.class);
 
     /**
      * The amount of blank lines that a specific node should have.
      * Absent is to inherit the {@link BlankLineStyle} of the document.
+     *
+     * @since 4.3.0
      */
     public static final RepresentationHint<Integer> BLANK_LINE_STYLE_OVERRIDE
         = RepresentationHint.of("configurate:yaml/blank_line_style_override", Integer.class);
@@ -241,7 +243,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * @param style the style to apply
          * @return this builder
          * @see BlankLineStyle
-         * @since 4.2.0
+         * @since 4.3.0
          */
         public Builder blankLineStyle(final @Nullable BlankLineStyle style) {
             this.optionStateBuilder().value(BLANK_LINE_STYLE, style);
@@ -253,7 +255,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          * This doesn't return the implicit fallback used when not setting it explicitly.
          *
          * @return the blank line style
-         * @since 4.2.0
+         * @since 4.3.0
          */
         public @Nullable BlankLineStyle blankLineStyle() {
             return this.optionState().value(BLANK_LINE_STYLE);
@@ -269,7 +271,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          *
          * @param enableComments whether comment handling should be enabled
          * @return this builder (for chaining)
-         * @since 4.2.0
+         * @since 4.3.0
          */
         public Builder commentsEnabled(final boolean enableComments) {
             this.optionStateBuilder().value(COMMENTS_ENABLED, enableComments);
@@ -281,7 +283,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          *
          * @return whether comment handling is enabled
          * @see #commentsEnabled(boolean) for details on comment handling
-         * @since 4.2.0
+         * @since 4.3.0
          */
         public boolean commentsEnabled() {
             return this.optionState().value(COMMENTS_ENABLED);
@@ -294,7 +296,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          *
          * @param lineLength the maximum length of a configuration line
          * @return this builder (for chaining)
-         * @since 4.2.0
+         * @since 4.3.0
          */
         public Builder lineLength(final int lineLength) {
             this.optionStateBuilder().value(LINE_LENGTH, lineLength);
@@ -306,7 +308,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
          *
          * @return the maximum length of a configuration line
          * @see #lineLength(int) for details on the line length
-         * @since 4.2.0
+         * @since 4.3.0
          */
         public int lineLength() {
             return this.optionState().value(LINE_LENGTH);

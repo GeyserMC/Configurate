@@ -329,7 +329,7 @@ public interface ObjectMapper<V> {
              * @param factory factory for callback function
              * @param <A> annotation type
              * @return this builder
-             * @since 4.0.0
+             * @since 4.3.0
              */
             default <A extends Annotation> Builder addProcessor(final Class<A> definition, final Processor.AdvancedFactory<A, Object> factory) {
                 return addProcessor(definition, Object.class, factory);
@@ -350,7 +350,7 @@ public interface ObjectMapper<V> {
              * @param <A> annotation type
              * @param <T> data type
              * @return this builder
-             * @since 4.0.0
+             * @since 4.3.0
              */
             <A extends Annotation, T> Builder addProcessor(Class<A> definition, Class<T> valueType, Processor.AdvancedFactory<A, T> factory);
 

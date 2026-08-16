@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * this method. This is practically only used for default methods, as normal
  * interface methods need to have an implementation.
  *
- * @since 4.2.0
+ * @since 4.3.0
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)

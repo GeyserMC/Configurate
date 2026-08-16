@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * Creates a field which makes the annotated method act as a simple getter /
  * setter without being handled as a config node.
  *
- * @since 4.2.0
+ * @since 4.3.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})

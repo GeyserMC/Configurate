@@ -19,7 +19,7 @@ package org.spongepowered.configurate.yaml;
 /**
  * Representation of blank lines in a YAML document.
  *
- * @since 4.2.0
+ * @since 4.3.0
  */
 public enum BlankLineStyle {
 
@@ -45,7 +45,7 @@ public enum BlankLineStyle {
      *  j: 1
      * }</pre>
      *
-     * @since 4.2.0
+     * @since 4.3.0
      */
     NONE,
     /**
@@ -75,7 +75,7 @@ public enum BlankLineStyle {
      *  j: 1
      * }</pre>
      *
-     * @since 4.2.0
+     * @since 4.3.0
      */
     AFTER_NESTED,
     /**
@@ -106,7 +106,7 @@ public enum BlankLineStyle {
      *  j: 1
      * }</pre>
      *
-     * @since 4.2.0
+     * @since 4.3.0
      */
     ROOT_CHILDREN
 
