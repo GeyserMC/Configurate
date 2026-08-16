@@ -51,7 +51,7 @@ final class YamlRepresenter extends Representer {
 
     YamlRepresenter(final @Nullable BlankLineStyle blankLineStyle, final boolean padComments, final DumperOptions options) {
         super(options);
-        this.blankLineStyle = blankLineStyle != null ? blankLineStyle : BlankLineStyle.AFTER_NESTED;
+        this.blankLineStyle = blankLineStyle != null ? blankLineStyle : BlankLineStyle.ROOT_CHILDREN;
         this.padComments = padComments;
         multiRepresenters.put(ConfigurationNode.class, new ConfigurationNodeRepresent());
         nullRepresenter = new EmptyNullRepresenter();
