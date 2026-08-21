@@ -129,7 +129,10 @@ class YamlConstructor extends Constructor {
                 outputBuilder.append(lineStripped);
             }
         }
-        return outputBuilder.toString();
+
+        final String result = outputBuilder.toString();
+        // We see an empty comment as formatting, and thus should not result in a comment.
+        return result.isEmpty() ? null : result;
     }
 
     private static String removeLineBreaksForLine(final String line) {

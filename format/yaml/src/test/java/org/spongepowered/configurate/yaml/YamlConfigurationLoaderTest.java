@@ -224,6 +224,44 @@ class YamlConfigurationLoaderTest {
     }
 
     @Test
+    void testReadWriteBlankLines(final @TempDir Path tempDir) throws IOException {
+        // Blank lines already present in the source are parsed as comments consisting only of blank
+        // lines. If those are kept as comments, writing adds a second blank line on top of them.
+        final URL source = this.resource("blank-lines-root-children.yml");
+        final Path destination = tempDir.resolve("blank-lines-readwrite.yml");
+
+        final YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+            .path(destination)
+            .url(source)
+            .nodeStyle(NodeStyle.BLOCK)
+            .blankLineStyle(BlankLineStyle.ROOT_CHILDREN)
+            .build();
+
+        final ConfigurationNode sourceNode = loader.load();
+        loader.save(sourceNode);
+
+        assertContentsSame(source, destination);
+    }
+
+    @Test
+    void testReadWriteBlankLinesAfterNested(final @TempDir Path tempDir) throws IOException {
+        final URL source = this.resource("blank-lines-after-nested.yml");
+        final Path destination = tempDir.resolve("blank-lines-nested-readwrite.yml");
+
+        final YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+            .path(destination)
+            .url(source)
+            .nodeStyle(NodeStyle.BLOCK)
+            .blankLineStyle(BlankLineStyle.AFTER_NESTED)
+            .build();
+
+        final ConfigurationNode sourceNode = loader.load();
+        loader.save(sourceNode);
+
+        assertContentsSame(source, destination);
+    }
+
+    @Test
     void testComplexKeys() throws ConfigurateException {
         final URL source = this.resource("complex-keys.yaml");
         final CommentedConfigurationNode node = YamlConfigurationLoader.builder()
