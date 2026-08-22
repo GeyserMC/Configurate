@@ -24,6 +24,7 @@ import org.spongepowered.configurate.ConfigurationOptions;
 import org.spongepowered.configurate.loader.AbstractConfigurationLoader;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.comments.CommentLine;
+import org.yaml.snakeyaml.comments.CommentType;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
@@ -40,13 +41,16 @@ import java.util.regex.Pattern;
 
 class YamlConstructor extends Constructor {
 
+    static final char BLANK_LINE_COMMENT_INDICATOR = '\0';
     private static final Pattern LINE_BREAK_PATTERN = Pattern.compile("\\R");
 
     private final ConfigurationOptions options;
+    private final BlankLineStyle blankLineStyle;
 
-    YamlConstructor(final LoaderOptions loadingConfig, final ConfigurationOptions options) {
+    YamlConstructor(final LoaderOptions loadingConfig, final ConfigurationOptions options, final BlankLineStyle blankLineStyle) {
         super(loadingConfig);
         this.options = options;
+        this.blankLineStyle = blankLineStyle;
     }
 
     @Override
@@ -112,16 +116,31 @@ class YamlConstructor extends Constructor {
         return node.comment(commentFor(yamlNode.getBlockComments()));
     }
 
-    private static @Nullable String commentFor(final @Nullable List<CommentLine> commentLines) {
+    private @Nullable String commentFor(final @Nullable List<CommentLine> commentLines) {
         if (commentLines == null || commentLines.isEmpty()) {
             return null;
         }
 
         final StringBuilder outputBuilder = new StringBuilder();
+        boolean first = true;
+
         for (final CommentLine line : commentLines) {
-            if (outputBuilder.length() > 0) {
+            final boolean blank = line.getCommentType() == CommentType.BLANK_LINE;
+            // Blank lines are considered formatting, and thus will not result in a comment.
+            // Users can instead configure blank lines using the BLANK_LINE_STYLE_OVERRIDE.
+            // Unless it's keep, as explained by its Javadoc.
+            if (blank && this.blankLineStyle != BlankLineStyle.KEEP) {
+                continue;
+            }
+            if (!first) {
                 outputBuilder.append(AbstractConfigurationLoader.CONFIGURATE_LINE_SEPARATOR);
             }
+            first = false;
+            if (blank) {
+                outputBuilder.append(BLANK_LINE_COMMENT_INDICATOR);
+                continue;
+            }
+
             final String lineStripped = removeLineBreaksForLine(line.getValue());
             if (!lineStripped.isEmpty() && lineStripped.charAt(0) == ' ') {
                 outputBuilder.append(lineStripped, 1, lineStripped.length());
@@ -130,9 +149,7 @@ class YamlConstructor extends Constructor {
             }
         }
 
-        final String result = outputBuilder.toString();
-        // We see an empty comment as formatting, and thus should not result in a comment.
-        return result.isEmpty() ? null : result;
+        return !first ? outputBuilder.toString() : null;
     }
 
     private static String removeLineBreaksForLine(final String line) {

@@ -25,7 +25,11 @@ public enum BlankLineStyle {
 
     /**
      * Don't do any blank line styling.
-     * <br/>
+     * This includes seeing blank lines during read as formatting, which will be stripped.
+     * To keep those blank lines, use the {@link #KEEP} style.<br>
+     * <br>
+     * This is the default.<br>
+     * <br>
      * Example: <pre>
      * {@code
      *  a: 1
@@ -38,10 +42,10 @@ public enum BlankLineStyle {
      *    - name: hello
      *    - name: world
      *  g:
-     *   h:
-     *    - name: hello
-     *    - name: world
-     *   i: 1
+     *    h:
+     *      - name: hello
+     *      - name: world
+     *    i: 1
      *  j: 1
      * }</pre>
      *
@@ -49,8 +53,19 @@ public enum BlankLineStyle {
      */
     NONE,
     /**
-     * Add a blank line after a nested node.
-     * <br/>
+     * Keep the blank lines just like they were read.<br>
+     * <br>
+     * Note that this option, unlike the others,
+     * will also keep read blank lines (and store it in the comment.)
+     * These blank lines are stored using a special character,
+     * so if you write to a different format you may have to remove them manually.
+     *
+     * @since 4.3.0
+     */
+    KEEP,
+    /**
+     * Add a blank line after a nested node.<br>
+     * <br>
      * Example: <pre>
      * {@code
      *  a: 1
@@ -66,11 +81,11 @@ public enum BlankLineStyle {
      *    - name: world
      *
      *  g:
-     *   h:
-     *    - name: hello
-     *    - name: world
+     *    h:
+     *      - name: hello
+     *      - name: world
      *
-     *   i: 1
+     *    i: 1
      *
      *  j: 1
      * }</pre>
@@ -79,9 +94,8 @@ public enum BlankLineStyle {
      */
     AFTER_NESTED,
     /**
-     * Add a blank after every root child, except the last.
-     * This is the default.
-     * <br/>
+     * Add a blank after every root child, except the last.<br>
+     * <br>
      * Example: <pre>
      * {@code
      *  a: 1
@@ -98,16 +112,54 @@ public enum BlankLineStyle {
      *    - name: world
      *
      *  g:
-     *   h:
-     *    - name: hello
-     *    - name: world
-     *   i: 1
+     *    h:
+     *      - name: hello
+     *      - name: world
+     *    i: 1
      *
      *  j: 1
      * }</pre>
      *
      * @since 4.3.0
      */
-    ROOT_CHILDREN
+    ROOT_CHILDREN,
+    /**
+     * Prepend a blank line before every node with a comment, except from the first child.<br>
+     * <br>
+     * Example: <pre>
+     * {@code
+     *  # Hello
+     *  a: 1
+     *
+     *  # World
+     *  b:
+     *    # John
+     *    c: 1
+     *
+     *  # Doe
+     *  e:
+     *    - hello
+     *    - world
+     *
+     *  # Jane
+     *  f:
+     *    - name: hello
+     *    - name: world
+     *
+     *  # Doe
+     *  g:
+     *    # Lorum
+     *    h:
+     *      - name: hello
+     *      - name: world
+     *
+     *    # Ipsum
+     *    i: 1
+     *  j: 1
+     * }</pre>
+     *
+     * @since 4.3.0
+     */
+    BEFORE_COMMENT
 
 }

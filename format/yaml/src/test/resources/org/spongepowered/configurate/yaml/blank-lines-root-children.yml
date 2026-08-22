@@ -1,0 +1,16 @@
+first: 1
+
+second: 2
+
+# A comment on a root child, which keeps a single blank line above it
+third:
+    nested: true
+    other: false
+
+fourth:
+    - one
+    - two
+
+#
+fifth:
+    one: true

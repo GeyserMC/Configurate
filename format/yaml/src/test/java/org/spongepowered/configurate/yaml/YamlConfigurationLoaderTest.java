@@ -225,10 +225,28 @@ class YamlConfigurationLoaderTest {
 
     @Test
     void testReadWriteBlankLines(final @TempDir Path tempDir) throws IOException {
+        final URL source = this.resource("blank-lines-keep.yml");
+        final Path destination = tempDir.resolve("blank-lines-readwrite.yml");
+
+        final YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+            .path(destination)
+            .url(source)
+            .nodeStyle(NodeStyle.BLOCK)
+            .blankLineStyle(BlankLineStyle.KEEP)
+            .build();
+
+        final ConfigurationNode sourceNode = loader.load();
+        loader.save(sourceNode);
+
+        assertContentsSame(source, destination);
+    }
+
+    @Test
+    void testReadWriteBlankLinesRootChildren(final @TempDir Path tempDir) throws IOException {
         // Blank lines already present in the source are parsed as comments consisting only of blank
         // lines. If those are kept as comments, writing adds a second blank line on top of them.
         final URL source = this.resource("blank-lines-root-children.yml");
-        final Path destination = tempDir.resolve("blank-lines-readwrite.yml");
+        final Path destination = tempDir.resolve("blank-lines-root-readwrite.yml");
 
         final YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
             .path(destination)
@@ -259,6 +277,25 @@ class YamlConfigurationLoaderTest {
         loader.save(sourceNode);
 
         assertContentsSame(source, destination);
+    }
+
+    @Test
+    void testReadWriteBlankLinesBeforeComment(final @TempDir Path tempDir) throws IOException {
+        final URL source = this.resource("blank-lines-before-comment.yml");
+        final URL expected = this.resource("blank-lines-before-comment-expected.yml");
+        final Path destination = tempDir.resolve("blank-lines-before-comment-readwrite.yml");
+
+        final YamlConfigurationLoader loader = YamlConfigurationLoader.builder()
+            .path(destination)
+            .url(source)
+            .nodeStyle(NodeStyle.BLOCK)
+            .blankLineStyle(BlankLineStyle.BEFORE_COMMENT)
+            .build();
+
+        final ConfigurationNode sourceNode = loader.load();
+        loader.save(sourceNode);
+
+        assertContentsSame(expected, destination);
     }
 
     @Test

@@ -1,7 +1,6 @@
 mapping:
     first: hello
     second: world
-
 list:
     - 1
     - 2

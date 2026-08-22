@@ -322,7 +322,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
 
     private final LoaderOptions loaderOpts;
     private final DumperOptions dumperOpts;
-    private final @Nullable BlankLineStyle blankLineStyle;
+    private final BlankLineStyle blankLineStyle;
 
     private YamlConfigurationLoader(final Builder builder) {
         super(builder, new CommentHandler[] {CommentHandlers.HASH});
@@ -339,12 +339,13 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
         this.dumperOpts.setIndicatorIndent(builder.optionState().value(Builder.INDENT));
         this.dumperOpts.setIndentWithIndicator(true);
 
-        this.blankLineStyle = builder.optionState().value(Builder.BLANK_LINE_STYLE);
+        final @Nullable BlankLineStyle configuredBlankLineStyle = builder.optionState().value(Builder.BLANK_LINE_STYLE);
+        this.blankLineStyle = configuredBlankLineStyle != null ? configuredBlankLineStyle : BlankLineStyle.NONE;
     }
 
     @Override
     protected void loadInternal(final CommentedConfigurationNode node, final BufferedReader reader) {
-        final Constructor constructor = new YamlConstructor(this.loaderOpts, node.options());
+        final Constructor constructor = new YamlConstructor(this.loaderOpts, node.options(), this.blankLineStyle);
         final Yaml yaml = new Yaml(constructor, new YamlRepresenter(this.blankLineStyle, true, this.dumperOpts), this.dumperOpts, this.loaderOpts);
 
         @Nullable CommentedConfigurationNode loaded = yaml.load(reader);
@@ -359,7 +360,7 @@ public final class YamlConfigurationLoader extends AbstractConfigurationLoader<C
 
     @Override
     protected void saveInternal(final ConfigurationNode node, final Writer writer) {
-        final Constructor constructor = new YamlConstructor(this.loaderOpts, node.options());
+        final Constructor constructor = new YamlConstructor(this.loaderOpts, node.options(), this.blankLineStyle);
         final Yaml yaml = new Yaml(constructor, new YamlRepresenter(this.blankLineStyle, true, this.dumperOpts), this.dumperOpts, this.loaderOpts);
         yaml.dump(node, writer);
     }

@@ -49,9 +49,9 @@ final class YamlRepresenter extends Representer {
     private final BlankLineStyle blankLineStyle;
     private final boolean padComments;
 
-    YamlRepresenter(final @Nullable BlankLineStyle blankLineStyle, final boolean padComments, final DumperOptions options) {
+    YamlRepresenter(final BlankLineStyle blankLineStyle, final boolean padComments, final DumperOptions options) {
         super(options);
-        this.blankLineStyle = blankLineStyle != null ? blankLineStyle : BlankLineStyle.ROOT_CHILDREN;
+        this.blankLineStyle = blankLineStyle;
         this.padComments = padComments;
         multiRepresenters.put(ConfigurationNode.class, new ConfigurationNodeRepresent());
         nullRepresenter = new EmptyNullRepresenter();
@@ -79,7 +79,7 @@ final class YamlRepresenter extends Representer {
                     value.setBlockComments(Collections.emptyList());
 
                     final @Nullable Integer childBlankLineCount = child.ownHint(YamlConfigurationLoader.BLANK_LINE_STYLE_OVERRIDE);
-                    if (childBlankLineCount == null && !first && separateBefore(node, previousNested)) {
+                    if (childBlankLineCount == null && !first && separateBefore(node, child, previousNested)) {
                         addBlockCommentBlankLine(key, 1);
                     }
                     first = false;
@@ -117,7 +117,7 @@ final class YamlRepresenter extends Representer {
                 final @Nullable String nodeComment = ((CommentedConfigurationNodeIntermediary<?>) node).comment();
                 if (nodeComment != null) {
                     yamlNode.setBlockComments(
-                        Arrays.stream(CONFIGURATE_LINE_PATTERN.split(nodeComment))
+                        Arrays.stream(CONFIGURATE_LINE_PATTERN.split(nodeComment, -1))
                             .map(this::commentLineFor)
                             .collect(Collectors.toList())
                     );
@@ -136,11 +136,18 @@ final class YamlRepresenter extends Representer {
             return NodeStyle.asSnakeYaml(requested);
         }
 
-        private boolean separateBefore(final ConfigurationNode parent, final boolean previousNested) {
+        private boolean separateBefore(final ConfigurationNode parent, final ConfigurationNode child, final boolean previousNested) {
             switch (YamlRepresenter.this.blankLineStyle) {
-                case ROOT_CHILDREN: return parent.parent() == null;
-                case AFTER_NESTED: return previousNested;
-                default: return false;
+                case ROOT_CHILDREN:
+                    return parent.parent() == null;
+                case AFTER_NESTED:
+                    return previousNested;
+                case BEFORE_COMMENT:
+                    return child instanceof CommentedConfigurationNodeIntermediary<?>
+                        && ((CommentedConfigurationNodeIntermediary<?>) child).comment() != null
+                        && !(parent.parent() != null && parent.parent().isList());
+                default:
+                    return false;
             }
         }
 
@@ -162,11 +169,14 @@ final class YamlRepresenter extends Representer {
         }
 
         private CommentLine commentLineFor(final String comment) {
-            if (comment.isEmpty()) {
+            if (comment.length() == 1 && comment.charAt(0) == YamlConstructor.BLANK_LINE_COMMENT_INDICATOR) {
                 return BLANK_LINE;
-            } else if (!YamlRepresenter.this.padComments || comment.charAt(0) == '#') {
+            }
+
+            if (!YamlRepresenter.this.padComments || comment.isEmpty() || comment.charAt(0) == '#') {
                 return new CommentLine(null, null, comment, CommentType.BLOCK);
             }
+
             // prepend a space before the comment:
             // before: #hello
             // after:  # hello
