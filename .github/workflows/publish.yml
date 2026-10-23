@@ -10,6 +10,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           submodules: recursive
+          fetch-depth: 0
 
       - uses: actions/setup-java@v3
         with:
@@ -23,13 +24,13 @@ jobs:
           cache-read-only: ${{ github.ref_name != 'master' && github.ref_name != 'development' }}
 
       - name: Publish to Maven Repository
-        if: ${{ github.repository == 'GeyserMC/Configurate' }}
+        if: ${{ github.repository == 'GeyserMC/Configurate' && !startsWith(github.ref, 'refs/tags/') }}
         uses: gradle/gradle-build-action@v2
         env:
           ORG_GRADLE_PROJECT_geysermcUsername: ${{ vars.DEPLOY_USER }}
           ORG_GRADLE_PROJECT_geysermcPassword: ${{ secrets.DEPLOY_PASS }}
         with:
-          arguments: publishMavenPublicationToGeysermcRepository
+          arguments: publishMavenPublicationToGeysermcRepository -PskipSigning
           cache-read-only: ${{ github.ref_name != 'master' && github.ref_name != 'development' }}
 
       - name: Notify Discord
