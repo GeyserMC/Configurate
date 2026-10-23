@@ -36,4 +36,7 @@ if (!propsFile.exists()) {
 
 include "snakeyaml"
 include "typesafe-config"
+// Gradle refuses to configure a project whose directory doesn't exist, and the patched repo only
+// exists after the patches are applied.
+file("typesafe-config/config").mkdirs()
 findProject(":typesafe-config").projectDir = file("typesafe-config/config")
