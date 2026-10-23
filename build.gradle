@@ -3,6 +3,7 @@ import static org.eclipse.jgit.lib.Repository.shortenRefName
 plugins {
     alias(libs.plugins.kotlin) apply false
     alias(libs.plugins.dokka) apply false
+    alias(libs.plugins.dokka.javadoc) apply false
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.aggregateJavadoc)
     alias(libs.plugins.gitPublish)

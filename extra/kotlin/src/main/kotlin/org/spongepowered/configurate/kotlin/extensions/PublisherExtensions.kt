@@ -18,7 +18,7 @@ package org.spongepowered.configurate.kotlin.extensions
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import org.spongepowered.configurate.reactive.Publisher
@@ -30,7 +30,7 @@ fun <V : Any> Publisher<V>.asFlow(): Flow<V> = callbackFlow {
     val observer =
         object : Subscriber<V> {
             override fun submit(item: V) {
-                sendBlocking(item)
+                trySendBlocking(item).getOrThrow()
             }
 
             override fun onError(thrown: Throwable) {

@@ -3,9 +3,10 @@ assertj = "3.27.7"
 autoValue = "1.11.1"
 checkerQual = "3.51.1"
 checkstyle = "12.3.1"
+dokka = "2.2.0"
 geantyref = "1.3.16"
 errorprone = "2.42.0"
-indra = "4.0.0"
+indra = "4.1.0"
 junit = "5.14.2"
 ktlint = "0.49.1"
 ktfmt = "0.61"
@@ -30,7 +31,7 @@ junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 stylecheck = "ca.stellardrift:stylecheck:0.2.1"
 
 # Kotlin
-kotlin-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+kotlin-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0"
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" } # version from Kotlin BOM
 
 # Core
@@ -67,14 +68,14 @@ jansi = "org.fusesource.jansi:jansi:2.4.2"
 # Build
 build-codenarc = { module = "org.codenarc:CodeNarc", version = "3.6.0-groovy-4.0" }
 build-codenarcGroovy = { module = "org.apache.groovy:groovy-all", version = "5.0.4" }
-build-errorprone = "net.ltgt.gradle:gradle-errorprone-plugin:4.3.0"
+build-errorprone = "net.ltgt.gradle:gradle-errorprone-plugin:5.1.1"
 build-forbiddenApis = "de.thetaphi:forbiddenapis:3.10"
 build-goomph = "com.diffplug.gradle:goomph:4.4.1"
 build-indra = { module = "net.kyori:indra-common", version.ref = "indra" }
 build-indra-crossdoc = { module = "net.kyori:indra-crossdoc", version.ref = "indra" }
 build-japicmp-plugin = "me.champeau.gradle:japicmp-gradle-plugin:0.4.6"
 build-japicmp = { module = "com.github.siom79.japicmp:japicmp", version.require = "0.24.+" }
-build-nullaway = "net.ltgt.gradle:gradle-nullaway-plugin:2.3.0"
+build-nullaway = "net.ltgt.gradle:gradle-nullaway-plugin:3.3.0"
 build-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 build-shadow = { module = "com.gradleup.shadow:shadow-gradle-plugin", version = "9.3.1" }
 
@@ -84,13 +85,14 @@ zCheckstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "check
 zKtfmt = { module = "com.facebook:ktfmt", version.ref = "ktfmt" }
 
 [plugins]
-aggregateJavadoc = "io.freefair.aggregate-javadoc-jar:8.14.2"
-detekt = "io.gitlab.arturbosch.detekt:1.23.8"
-dokka = "org.jetbrains.dokka:1.9.20"
+aggregateJavadoc = "io.freefair.aggregate-javadoc-jar:9.8.2"
+detekt = "dev.detekt:2.0.0-alpha.6"
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
 gitPublish = "org.ajoberstar.git-publish:5.1.3"
-gitpatcher = { id = "ca.stellardrift.gitpatcher", version = "1.1.2" }
+gitpatcher = { id = "ca.stellardrift.gitpatcher", version = "2.0.0" }
 indra-sonatype = { id = "net.kyori.indra.publishing.sonatype", version.ref = "indra" }
 indra-git = { id = "net.kyori.indra.git", version.ref = "indra" }
-kotlin = "org.jetbrains.kotlin.jvm:1.9.25"
+kotlin = "org.jetbrains.kotlin.jvm:2.4.21"
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

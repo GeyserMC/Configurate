@@ -148,7 +148,7 @@ plugins.withId('org.jetbrains.kotlin.jvm') {
             ktfmt(libs.versions.ktfmt.get()).kotlinlangStyle()
             spotlessCommon(it)
         }
-        plugins.withId("io.gitlab.arturbosch.detekt") {
+        plugins.withId("dev.detekt") {
             tasks.named("detekt").configure {
                 jvmTarget = Versioning.versionString(indra.javaVersions().target().get())
             }
@@ -260,7 +260,6 @@ def apiDiffPreviousArchive = configurations.register("apiDiffPreviousArchive") {
     canBeResolved = true
     transitive = false
     extendsFrom(apiDiffPrevious.get())
-    visible = false
 }
 
 tasks.register("apiDiff", me.champeau.gradle.japicmp.JapicmpTask) {

@@ -1,5 +1,5 @@
-import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import dev.detekt.gradle.Detekt
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id 'application'
@@ -28,9 +28,10 @@ tasks.withType(JavaCompile).configureEach {
     targetCompatibility = "9"
 }
 
-tasks.withType(KotlinCompile).configureEach {
-    kotlinOptions.jvmTarget = "9"
-    kotlinOptions.freeCompilerArgs = ["-Xnew-inference"]
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_9
+    }
 }
 
 tasks.jar.configure {
