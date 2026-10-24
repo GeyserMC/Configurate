@@ -94,6 +94,7 @@ indra {
     apache2License()
 
     publishSnapshotsTo("geysermc", "https://repo.opencollab.dev/maven-snapshots")
+    publishReleasesTo("geysermc", "https://repo.opencollab.dev/maven-releases")
 
     configurePublications {
         artifactId = archiveName
