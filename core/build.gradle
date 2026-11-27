@@ -21,7 +21,7 @@ dependencies {
 }
 
 tasks.jar {
-    manifest.attributes["Automatic-Module-Name"] = "${project.group}.configurate"
+    manifest.attributes["Automatic-Module-Name"] = "org.spongepowered.configurate"
 }
 
 tasks {

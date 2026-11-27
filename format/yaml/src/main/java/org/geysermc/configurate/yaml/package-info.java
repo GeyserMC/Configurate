@@ -23,7 +23,7 @@
  * types field can be adjusted to customize output.
  */
 @DefaultQualifier(NonNull.class)
-package org.spongepowered.configurate.yaml;
+package org.geysermc.configurate.yaml;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.framework.qual.DefaultQualifier;

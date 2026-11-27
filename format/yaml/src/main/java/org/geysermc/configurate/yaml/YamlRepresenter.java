@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.spongepowered.configurate.yaml;
+package org.geysermc.configurate.yaml;
 
 import static org.spongepowered.configurate.loader.AbstractConfigurationLoader.CONFIGURATE_LINE_PATTERN;
 
@@ -96,7 +96,7 @@ final class YamlRepresenter extends Representer {
                 yamlNode = new SequenceNode(Tag.SEQ, children, this.flowStyle(node));
             } else {
                 final Node optionNode = represent(node.rawScalar());
-                final org.spongepowered.configurate.yaml.@Nullable ScalarStyle requestedStyle
+                final org.geysermc.configurate.yaml.@Nullable ScalarStyle requestedStyle
                     = node.ownHint(YamlConfigurationLoader.SCALAR_STYLE);
                 if (optionNode instanceof ScalarNode && requestedStyle != null) {
                     final ScalarNode scalar = (ScalarNode) optionNode;
@@ -105,7 +105,7 @@ final class YamlRepresenter extends Representer {
                         scalar.getValue(),
                         scalar.getStartMark(),
                         scalar.getEndMark(),
-                        org.spongepowered.configurate.yaml.ScalarStyle.asSnakeYaml(requestedStyle, scalar.getScalarStyle())
+                        org.geysermc.configurate.yaml.ScalarStyle.asSnakeYaml(requestedStyle, scalar.getScalarStyle())
                     );
                 } else {
                     yamlNode = optionNode;

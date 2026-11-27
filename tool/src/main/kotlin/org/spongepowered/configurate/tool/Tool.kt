@@ -35,6 +35,8 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.FileSystems
 import org.fusesource.jansi.AnsiConsole
 import org.fusesource.jansi.AnsiRenderer
+import org.geysermc.configurate.yaml.NodeStyle
+import org.geysermc.configurate.yaml.YamlConfigurationLoader
 import org.spongepowered.configurate.AttributedConfigurationNode
 import org.spongepowered.configurate.BasicConfigurationNode
 import org.spongepowered.configurate.CommentedConfigurationNode
@@ -46,8 +48,6 @@ import org.spongepowered.configurate.hocon.HoconConfigurationLoader
 import org.spongepowered.configurate.loader.ConfigurationLoader
 import org.spongepowered.configurate.loader.HeaderMode
 import org.spongepowered.configurate.xml.XmlConfigurationLoader
-import org.spongepowered.configurate.yaml.NodeStyle
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 
 const val DEFAULT_INDENT = 4
 val HAS_UTF8 = Charset.defaultCharset() == StandardCharsets.UTF_8

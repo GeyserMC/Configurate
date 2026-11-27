@@ -4,6 +4,9 @@ plugins {
 
 description = "Utility classes for generated config interface implementations"
 
+// Newly added module
+configurate.replacesUpstream = false
+
 dependencies {
     api projects.core
     testAnnotationProcessor projects.extra.extraInterface.extraInterfaceAp
