@@ -17,10 +17,10 @@
 package org.spongepowered.configurate.kotlin.examples
 
 import java.nio.file.Path
+import org.geysermc.configurate.yaml.YamlConfigurationLoader
 import org.spongepowered.configurate.kotlin.dataClassFieldDiscoverer
 import org.spongepowered.configurate.loader.ConfigurationLoader
 import org.spongepowered.configurate.objectmapping.ObjectMapper
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader
 
 fun createLoader(source: Path): ConfigurationLoader<*> {
     // Create a new yaml loader for the target that uses options customized to

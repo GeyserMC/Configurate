@@ -4,13 +4,19 @@ plugins {
 
 description = "YAML format loader for Configurate"
 
+// Has its own package, so it can be used alongside (or instead of) the upstream YAML loader
+configurate.replacesUpstream = false
+
 dependencies {
     api projects.core
     shaded "configurate.thirdparty:snakeyaml:version-from-submodule"
 }
 
 tasks {
+    jar {
+        manifest.attributes["Automatic-Module-Name"] = "${project.group}.yaml"
+    }
     shadowJar {
-        relocate("org.yaml.snakeyaml", "${project.group}.configurate.yaml.internal.snakeyaml")
+        relocate("org.yaml.snakeyaml", "${project.group}.yaml.internal.snakeyaml")
     }
 }

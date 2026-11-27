@@ -10,6 +10,25 @@ import org.gradle.external.javadoc.StandardJavadocDocletOptions
 
 class ConfigurateExtension {
 
+    /**
+     * The Maven group upstream Configurate publishes its modules under.
+     */
+    static final String UPSTREAM_GROUP = 'org.spongepowered'
+
+    /**
+     * Whether this module is a drop-in replacement for the upstream module of
+     * the same name, sharing its Java packages.
+     *
+     * <p>If so, it declares the upstream module's coordinates as a Gradle
+     * capability, so consumers that end up with both on their classpath get a
+     * capability conflict to resolve instead of silently shipping duplicate
+     * classes.</p>
+     *
+     * <p>Modules that only exist in this fork, or that use their own Java
+     * packages, should set this to {@code false}.</p>
+     */
+    boolean replacesUpstream = true
+
     @PackageScope VersionCatalog libs
     private final DependencyHandler dh
 

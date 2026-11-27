@@ -3,6 +3,7 @@ import de.thetaphi.forbiddenapis.gradle.CheckForbiddenApis
 import net.kyori.indra.util.Versioning
 import org.eclipse.jgit.lib.Repository
 import org.gradle.api.attributes.java.TargetJvmVersion
+import org.spongepowered.configurate.build.ConfigurateExtension
 
 plugins {
     id "org.spongepowered.configurate.build.base"
@@ -162,7 +163,27 @@ plugins.withId('org.jetbrains.kotlin.jvm') {
 
 // Set up automatic module name
 tasks.jar {
-    manifest.attributes["Automatic-Module-Name"] = "${project.group}.configurate.${project.name.replace('-', '.')}"
+    manifest.attributes["Automatic-Module-Name"] = "${ConfigurateExtension.UPSTREAM_GROUP}.configurate.${project.name.replace('-', '.')}"
+}
+
+// Declare the upstream coordinates as a capability of modules that replace their upstream counterpart,
+// so consumers that end up with both on the classpath have to explicitly pick one
+afterEvaluate {
+    if (!configurate.replacesUpstream) {
+        return
+    }
+    def artifactId = "configurate-${project.name.toLowerCase(Locale.ROOT)}"
+    def publishedVariants = ["apiElements", "runtimeElements", "sourcesElements", "javadocElements", "shadowRuntimeElements"]
+    configurations.matching { it.name in publishedVariants }.configureEach {
+        outgoing {
+            // Declaring any capability replaces the implicit one, so we have to redeclare it ourselves.
+            // Within this build, project dependencies look for a capability named after the project...
+            capability("${project.group}:${project.name}:${project.version}")
+            // ...while consumers of the published module look for one named after the artifact
+            capability("${project.group}:${artifactId}:${project.version}")
+            capability("${ConfigurateExtension.UPSTREAM_GROUP}:${artifactId}:${project.version}")
+        }
+    }
 }
 
 // Configure target versions

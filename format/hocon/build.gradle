@@ -15,6 +15,6 @@ dependencies {
 
 tasks {
     shadowJar {
-        relocate("com.typesafe.config", "${project.group}.configurate.hocon.internal.typesafeconfig")
+        relocate("com.typesafe.config", "org.spongepowered.configurate.hocon.internal.typesafeconfig")
     }
 }

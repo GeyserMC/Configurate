@@ -4,6 +4,9 @@ plugins {
 
 description = "Annotation processor for Configurate to generate an implementation for config interfaces"
 
+// Newly added module
+configurate.replacesUpstream = false
+
 dependencies {
     implementation projects.core
     implementation projects.extra.extraInterface
